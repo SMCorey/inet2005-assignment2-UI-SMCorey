@@ -7,6 +7,8 @@ export default function Update() {
   const { id } = useParams();
   const [unit, setUnit] = useState(null);
   const [unitImg, setUnitImg] = useState(null);
+  const [responseError, setResponseError] = useState(null);
+
   // API URL
   const apiHost = import.meta.env.VITE_API_HOST;
   const apiUrl = apiHost + `/api/wh40k/get/${id}`;
@@ -47,17 +49,18 @@ export default function Update() {
     formData.append("state", data.state);
     formData.append("image", data.image[0] || null);
 
-    // Put data to API
+    // "Put" data to API/Database
     async function putData() {
       const response = await fetch(updateUrl, {
         method: "PUT",
         body: formData,
       });
 
+      // Handle response
       if (response.ok) {
         window.location.href = "/";
       } else {
-        // to-do: handle error
+          setResponseError(`Error: Could not update unit - ${response.statusText}`)
       }
     }
 
@@ -80,6 +83,7 @@ export default function Update() {
     <div className="bg-dark text-white min-vh-100 min-vw-100">
       <h1 className="text-center fw-bold">Update Unit</h1>
       <div className="container">
+        {responseError && <h2 className="text-center text-danger">{responseError}</h2>}
         {/* FORM START */}
         <form
           onSubmit={handleSubmit(updateUnit)}

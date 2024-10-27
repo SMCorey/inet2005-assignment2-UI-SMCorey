@@ -6,6 +6,8 @@ export default function Create() {
   const apiHost = import.meta.env.VITE_API_HOST;
   const apiUrl = apiHost + "/api/wh40k/add";
 
+  const [responseError, setResponseError] = useState(null);
+
   // react-hook-form
   const {
     register,
@@ -36,10 +38,11 @@ export default function Create() {
         body: formData,
       });
 
+      // Handle repsonse
       if (response.ok) {
         window.location.href = "/";
       } else {
-        // to-do: handle error
+          setResponseError(`Error: Could not create unit - ${response.statusText}`)
       }
     }
 
@@ -47,103 +50,105 @@ export default function Create() {
   }
 
   return (
-    <>
-      <h1>Add new Unit</h1>
+    <div className="bg-dark text-white min-vh-100 min-vw-100">
+      <h1 className="text-center fw-bold">Add new Unit</h1>
+      <div className="container">
+        {responseError && <h2 className="text-center text-danger">{responseError}</h2>}
+        <form
+          onSubmit={handleSubmit(addUnit)}
+          method="post"
+          encType="multipart/form-data"
+          className="mx-auto"
+          style={{ maxWidth: "600px" }}
+        >
+          <div className="mb-3">
+            <label className="form-label">Name</label>
+            <input
+              {...register("name", { required: true })}
+              type="text"
+              className="form-control bg-light"
+            />
+            {errors.name && <span className="text-danger">Name required.</span>}
+          </div>
 
-      <form
-        onSubmit={handleSubmit(addUnit)}
-        method="post"
-        encType="multipart/form-data"
-      >
-        <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input
-            {...register("name", { required: true })}
-            type="text"
-            className="form-control bg-light"
-          />
-          {errors.name && (
-            <span className="text-danger">Name is required.</span>
-          )}
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Faction</label>
+            <input
+              {...register("faction", { required: true })}
+              type="text"
+              className="form-control bg-light"
+            />
+            {errors.faction && (
+              <span className="text-danger">Faction required.</span>
+            )}
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Faction</label>
-          <input
-            {...register("faction", { required: true })}
-            type="text"
-            className="form-control bg-light"
-          />
-          {errors.faction && (
-            <span className="text-danger">Faction is required.</span>
-          )}
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Type</label>
+            <input
+              {...register("type", { required: true })}
+              type="text"
+              className="form-control bg-light"
+            />
+            {errors.type && <span className="text-danger">Type required.</span>}
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Type</label>
-          <input
-            {...register("type", { required: true })}
-            type="text"
-            className="form-control bg-light"
-          />
-          {errors.type && <span className="text-danger">Type required.</span>}
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Description</label>
+            <input
+              {...register("description")}
+              type="text"
+              className="form-control bg-light"
+            />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Description</label>
-          <input
-            {...register("description")}
-            type="text"
-            className="form-control bg-light"
-          />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">State</label>
+            <input
+              {...register("state")}
+              type="text"
+              className="form-control bg-light"
+            />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">State</label>
-          <input
-            {...register("state")}
-            type="text"
-            className="form-control bg-light"
-          />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Points</label>
+            {/* <input {...register("email", { required: true })} type="text" className="form-control bg-light" />
+              {errors.email && <span className="text-danger">Email is required.</span>} */}
+            <input
+              {...register("points", {
+                required: "Points required.",
+                validate: {
+                  validFormat: (value) =>
+                    /^([0-9]{1,4})$/.test(value) ||
+                    "Invalid Points. 0-9999 Allowed",
+                },
+              })}
+              type="text"
+              className="form-control bg-light"
+            />
+            {errors.points && (
+              <span className="text-danger">{errors.points.message}</span>
+            )}
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Points</label>
-          {/* <input {...register("email", { required: true })} type="text" className="form-control bg-light" />
-            {errors.email && <span className="text-danger">Email is required.</span>} */}
-          <input
-            {...register("points", {
-              required: "Points required.",
-              validate: {
-                validFormat: (value) =>
-                  /^([0-9]{1,4})$/.test(value) ||
-                  "Invalid Points. 0-9999 Allowed",
-              },
-            })}
-            type="text"
-            className="form-control bg-light"
-          />
-          {errors.points && (
-            <span className="text-danger">{errors.points.message}</span>
-          )}
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Image</label>
+            <input
+              {...register("image")}
+              type="file"
+              className="form-control bg-light"
+            />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Image</label>
-          <input
-            {...register("image")}
-            type="file"
-            className="form-control bg-light"
-          />
-        </div>
-
-        <button type="submit" className="btn btn-primary">
-          Add
-        </button>
-        <Link to="/" className="btn btn-outline-secondary ms-3">
-          Cancel
-        </Link>
-      </form>
-    </>
+          <button type="submit" className="btn btn-primary">
+            Add
+          </button>
+          <Link to="/" className="btn btn-outline-secondary ms-3">
+            Cancel
+          </Link>
+        </form>
+      </div>
+    </div>
   );
 }

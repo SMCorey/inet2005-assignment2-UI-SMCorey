@@ -7,6 +7,7 @@ export default function Home() {
   const apiHost = import.meta.env.VITE_API_HOST;
   const apiUrl = apiHost + "/api/wh40k/all";
 
+  // Get from API -> Trigger React state change
   useEffect(() => {
     // Fetch data from API
     async function fetchData() {

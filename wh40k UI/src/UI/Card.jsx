@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 
-//TODO: STYLE CARDS
 export default function Card(props) {
   return (
     <div className="card mt-2 mb-2 mx-2 card-shadow bg-secondary text-white">
       <div className="card-body">
         <div className="d-flex align-items-center position-relative">
+
+          {/* IMAGE */}
           <img
             src={`${props.apiHost}/images/${props.unit.filename}`}
             className="img-thumbnail"
@@ -13,6 +14,7 @@ export default function Card(props) {
             alt={"Image of " + props.unit.name}
           />
 
+          {/* CARD DATA */}
           <div className="unit-info overflow-auto">
             <h5 className="card-title">{props.unit.name}</h5>
 

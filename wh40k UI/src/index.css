@@ -74,11 +74,11 @@ button:focus-visible {
 .btn-hvr-edit:hover {
   background-color: #ffc107;
   border-color: #ffc107;
-  color: black; 
+  color: black;
 }
 
 .btn-hvr-delete:hover {
   background-color: red;
   border-color: red;
-  color: white; 
+  color: white;
 }

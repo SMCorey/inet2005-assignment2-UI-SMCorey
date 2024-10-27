@@ -8,6 +8,7 @@ export default function Delete() {
 
   // Store the result from API
   const [unit, setUnit] = useState(null);
+  const [responseError, setResponseError] = useState(null);
 
   const apiHost = import.meta.env.VITE_API_HOST;
   const getUrl = apiHost + "/api/wh40k/get/" + id;
@@ -41,10 +42,11 @@ export default function Delete() {
       method: "DELETE",
     });
 
+    // Control for good/bad response
     if (response.ok) {
       window.location.href = "/";
     } else {
-      // to-do: handle error
+        setResponseError(`Error: Could not delete unit - ${response.statusText}`)
     }
   }
 
@@ -55,6 +57,7 @@ export default function Delete() {
         Are you sure you want to remove this unit?
       </h2>
       <div className="container">
+        {responseError && <h2 className="text-center text-danger">{responseError}</h2>}
         {unit && <Card unit={unit} apiHost={apiHost} showLinks={false} />}
       </div>
 
